@@ -16,6 +16,7 @@ public class GIFLoop extends PApplet {
 
 int totalFrames = 120;
 int counter = 0;
+boolean record = true;
 
 public void setup(){
     
@@ -23,15 +24,33 @@ public void setup(){
 }
 
 public void draw(){
-    float percent = PApplet.parseFloat(counter) / totalFrames;
+    float percent = 0;
+    if (record) {
+        percent = PApplet.parseFloat(counter) / totalFrames;
+    } else {
+        percent = PApplet.parseFloat(frameCount % totalFrames) / totalFrames;
+    }
     render(percent);
-    counter++;
-    
+    if (record) {
+        saveFrame("output/gif-"+nf(counter,3)+".png");
+        counter++;
+        if (counter == totalFrames){
+            exit();
+        }
+    }
 }
 
 public void render(float percent){
     background(0);
-    ellipse(percent*width, height/2, 20, 20);
+
+    float angle = percent * TWO_PI;
+    translate(width/2, height/2);
+    rectMode(CENTER);
+    noFill();
+    stroke(255);
+    strokeWeight(2);
+    rotate(angle);
+    square(0, 0, 100);
 }
   public void settings() {  size(400,400); }
   static public void main(String[] passedArgs) {
